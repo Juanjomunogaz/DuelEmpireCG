@@ -135,7 +135,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         camera.position.set(ancho / 2f, alto / 2f, 0);
         //instacio la skin, para poderla usar en cualquier componente
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        if(ancho<alto){
+        if (ancho < alto) {
             ancho = Gdx.graphics.getHeight();
             alto = Gdx.graphics.getWidth();
         }
@@ -208,7 +208,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         noMostrado = true;
         switch (Gdx.app.getType()) {
             case Android:
-                ganador.setFontScale(4);
+                ganador.setFontScale(8f);
                 break;
             case Desktop:
                 ganador.setFontScale(3);
@@ -259,7 +259,8 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         stage.addActor(lmano4);
         stage.addActor(btnmano5);
         stage.addActor(lmano5);
-
+        ganador.setText("HAS SIDO DERROTADO");
+        stage.addActor(ganador);
         Gdx.input.setInputProcessor(stage);
         musica.setVolume(0.6f);
         musica.play();
@@ -856,7 +857,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         if (cartaEnMazoIA.size() > 0) {
             if (jugarCarta(cartaEnMazoIA.get(0), 2)) {
                 lmovimientoP2.setText("ULTIMA JUGADA: " + cartaEnMazoIA.get(0).getId());
-                Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId()+", quedan "+cartaEnMazoIA.size());
+                Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId() + ", quedan " + cartaEnMazoIA.size());
                 cartaEnMazoIA.remove(0);
                 i++;
             } else {
