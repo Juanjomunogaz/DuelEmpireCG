@@ -832,7 +832,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     private boolean CPUespera;
 
     /**
-     * Igual que el anterior pero para la IA
+     * Igual que el generador de el player pero para la IA
      */
     public void generarMazoIA() {
         for (int i = 0; i < NCARTASMAZO; i += 5) {
@@ -856,8 +856,8 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         if (cartaEnMazoIA.size() > 0) {
             if (jugarCarta(cartaEnMazoIA.get(0), 2)) {
                 lmovimientoP2.setText("ULTIMA JUGADA: " + cartaEnMazoIA.get(0).getId());
+                Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId()+", quedan "+cartaEnMazoIA.size());
                 cartaEnMazoIA.remove(0);
-                Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId());
                 i++;
             } else {
                 Gdx.app.log("La Ia no ha podido jugar la " + i + "º carta: ", "" + cartaEnMazoIA.get(0).getId() + "; Tiene O " + contOroIA + " M " + contManaIA);
