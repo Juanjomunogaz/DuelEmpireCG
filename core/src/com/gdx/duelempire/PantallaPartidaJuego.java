@@ -208,7 +208,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         noMostrado = true;
         switch (Gdx.app.getType()) {
             case Android:
-                ganador.setFontScale(8f);
+                ganador.setFontScale(6f);
                 break;
             case Desktop:
                 ganador.setFontScale(3);
