@@ -162,8 +162,7 @@ public class PantallaMenuPrincipalJuego extends PantallaBaseJuego {
 
         btnNuevaPartidaVSplayer = new TextButton("Partida online", skin);
         btnNuevaPartidaVSplayer.setSize(ancho / 2f, alto / 8f);
-        btnNuevaPartidaVSplayer.setDisabled(true);
-        btnNuevaPartidaVSplayer.setColor(Color.DARK_GRAY);
+
         btnNuevaPartidaVSplayer.setPosition(ancho / 4f, (alto / 20f) * 4f);
         btnNuevaPartidaVSplayer.addCaptureListener(new ChangeListener() {
             @Override
@@ -173,13 +172,24 @@ public class PantallaMenuPrincipalJuego extends PantallaBaseJuego {
 
         btnEditorMazos = new TextButton("Editor de mazos", skin);
         btnEditorMazos.setSize(ancho / 2f, alto / 8f);
-        btnEditorMazos.setDisabled(true);
-        btnEditorMazos.setColor(Color.DARK_GRAY);
+        btnNuevaPartidaVSplayer.setDisabled(true);
+        btnNuevaPartidaVSplayer.setColor(Color.DARK_GRAY);
         btnEditorMazos.setPosition(ancho / 4f, alto / 20f);
         btnEditorMazos.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                switch (Gdx.app.getType()) {
+                    case Desktop:
+                        Gdx.graphics.setWindowedMode(640, 480);/*Se debe establecer por defecto la pantalla con las
+                        dimensiones 640fx480f cuando se va a cambiar de pantalla para no descuadrar la pantalla que se abre*/
+                        break;
+                    case Android:
+                        //
+                        break;
+                }
+                juego.editor = new EditorMazos(juego);
+                juego.setScreen(juego.editor);
+                musica.stop();
             }
         });
         //escalado de los campos en función del dispositivo

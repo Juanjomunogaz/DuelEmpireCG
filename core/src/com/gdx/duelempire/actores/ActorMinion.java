@@ -255,15 +255,14 @@ public class ActorMinion extends Actor {
                 }
             } else {//si el propietario es player2
                 Gdx.app.log("No se puede mover el minion: ", "de la casilla " + casilla);
-                if (!(casillas[casilla - 2].getMinion() == null) || casilla <= 1) {
-                    Gdx.app.log("minion P2: ", "casilla " + casilla);
-                    //Gdx.app.log("No se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
-                    if (casillas[casilla - 1].getMinion() != null && casillas[casilla - 2].getMinion().getPropietario() == 1 && puedeAtacar) {
-                        Gdx.app.log("Minion P2 ataca minion: ", "");
+                if (!(casillas[casilla - 2].getMinion() == null) || casilla <=2 ) {
+                    Gdx.app.log("No se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
+                    if (casillas[casilla - 2].getMinion() != null && casillas[casilla - 2].getMinion().getPropietario() == 1 && puedeAtacar) {
+                        Gdx.app.log("Minion ataca minion: ", "");
                         minionAtacaMinion(casillas[casilla - 1].getMinion(), casillas[casilla - 2].getMinion(), casillas);
                         puedeAtacar = false;
                     } else if (casillas[casilla - 2].getEstructura() != null && casillas[casilla - 2].getEstructura().getTipo().equals("Player1") && puedeAtacar) {
-                        Gdx.app.log("Minion P2 ataca estructura: ", "");
+                        Gdx.app.log("Minion ataca estructura: ", "");
                         minionAtacaEstructura(casillas[casilla - 1].getMinion(), casillas[casilla - 2].getEstructura());
                         puedeAtacar = false;
                     }
@@ -272,7 +271,7 @@ public class ActorMinion extends Actor {
                     casillas[casilla - 2].setMinion(casillas[casilla - 1].getMinion());
                     casillas[casilla - 1].setMinion(null);
                     casilla--;
-                    setX(getX() - (580f / relacionx) / (casillas.length));/*se adelanta su posición x, se hace sobre 600f
+                    setX(getX() - (580f / relacionx) / (casillas.length));/*se adelanta su posición x, se hace sobre 580f
                     para que el movimiento de la última casilla no sea sobre la base enemiga y deje 40f pixeles de
                     margen*/
                     lSalud.setPosition(getX() + tamanox / 3f / relacionx, getY() + tamanoy / relaciony);

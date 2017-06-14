@@ -23,6 +23,7 @@ import com.gdx.duelempire.componentes.Carta;
 import com.gdx.duelempire.componentes.Casilla;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -149,6 +150,9 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         listaDeEfectos = new String[][]{{"0", ""}, {"1", "Da +2 AT a los\nminions"}, {"2", "Hace 20 danos a\nla base enemiga"},
                 {"3", "Da +2 de tasa\nde oro"}, {"4", "Cura 10 vidas a\ntu base y da +2\nde tasa de mana"}};
 
+        existe = -1;//variable usada para comprobar si hay un mazo precargado (-1 indica que no)
+        rnd = new Random();// genera valores para las cartas
+
         cartasActuales = NCARTASMAZO;
         cartaEnMazo = new ArrayList<Carta>();
         //Se rellena el mazo con NCARTASMAZO cartas aleatorias
@@ -177,7 +181,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         lcronometro = new Label("0", skin);
         lcronometro.setPosition(300f / relacionx, 430f / relaciony);
         lmovimientoP2 = new Label("ULTIMA JUGADA: ", skin);
-        lmovimientoP2.setPosition(400f / relacionx, 400f / relaciony);
+        lmovimientoP2.setPosition(380f / relacionx, 400f / relaciony);
         switch (Gdx.app.getType()) {
             case Android:
                 lcronometro.setFontScale(5);
@@ -680,7 +684,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     return true;
                 }
             } else {
-            //NO SE HA PODIDO JUGAR POR COSTE
+                //NO SE HA PODIDO JUGAR POR COSTE
                 return false;
             }
         } else {//player 2
@@ -697,8 +701,8 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     contOroIA -= carta.getCoste()[0];
                     tminion = new Texture(carta.getRutaTextura());
                     minion = new ActorMinion(2, casillas.length, carta.getId(), tminion, relacionx, relaciony, carta.getTamXminion(), carta.getTamYminion(), carta.getDefensa(), carta.getAtaque(), carta.getRatioAtaque(), carta.getMovilidad(), juego, skin);
-                    minion.setPosition(580f / relacionx , 220f / relaciony);//se invoca en la base
-                    minion.getLabelSalud().setPosition(((640f / relacionx) / casillas.length) * (casillas.length - 2) + carta.getTamXminion() / 3f / relacionx, 220f / relaciony + carta.getTamYminion() / relaciony);
+                    minion.setPosition(580f / relacionx, 220f / relaciony);//se invoca en la base
+                    minion.getLabelSalud().setPosition(580f / relacionx + carta.getTamXminion() / 3f / relacionx, 220f / relaciony + carta.getTamYminion() / relaciony);
                     casillas[casillas.length - 1].setMinion(minion);
                     Gdx.app.log("casilla final  ", "Minion: " + casillas[casillas.length - 1].getMinion().getName() + ", Estructura: " + casillas[casillas.length - 1].getEstructura().getName());
                     stage.addActor(minion);
@@ -722,20 +726,58 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         return false;
     }
 
+    private int existe;//
+    private Random rnd;//Variable para generar una carta u otra en el generador de mazos
+    private float recogernd;//Guarda el valor del Random
+
     /**
-     * Método utilizado para generar un mazo con un nº de cartas igual a NCARTASMAZO
+     * Método utilizado para generar un mazo con un nº de cartas igual a NCARTASMAZO, SOLO se utilizará
+     * cuando no hayas creado un mazo en el editor, o hayas borrado el mazo creado
      *
      * @param NCARTASMAZO
      */
     public void generarMazo(int NCARTASMAZO) {
-        for (int i = 0; i < NCARTASMAZO; i += 5) {
-            /************AQUÍ SE PUEDE HACER UNA LECTURA DE UN FICHERO BINARIO O BD, SOBRE LAS CARTAS**********/
-            cartaEnMazo.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2_2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
-            cartaEnMazo.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
-            cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
-            //cartaEnMazo.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
-            cartaEnMazo.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
-            cartaEnMazo.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
+        //Se comprueba si hay algun mazo ya guardado de  antes
+        try {
+            existe = juego.mazoGuardado.getInteger("C1");
+        } catch (Exception e) {
+            Gdx.app.log("No se detectó ningun mazo", "");
+        }
+        //Se mira que en la posicion uno haya una de las 6 cartas que existen en el juego
+        if (existe > 0 && existe < 6) {
+            //se va asignando el mazo a cada carta existente en el glosario (de 6 cartas)
+            for (int i = 0; i <= 30; i++) {
+                if (juego.mazoGuardado.getInteger("C" + i) == 1) {
+                    cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+                } else if (juego.mazoGuardado.getInteger("C" + i) == 2) {
+                    cartaEnMazo.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2_2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
+                } else if (juego.mazoGuardado.getInteger("C" + i) == 3) {
+                    cartaEnMazo.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
+                } else if (juego.mazoGuardado.getInteger("C" + i) == 4) {
+                    cartaEnMazo.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
+                } else if (juego.mazoGuardado.getInteger("C" + i) == 5) {
+                    cartaEnMazo.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
+                } else if (juego.mazoGuardado.getInteger("C" + i) == 6) {
+                    cartaEnMazo.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
+                }
+            }
+        } else {
+            for (int i = 0; i < NCARTASMAZO; i++) {
+                recogernd = rnd.nextFloat();//se genera un numero para evaluar el intervalo
+                if (recogernd < 0.25) {
+                    cartaEnMazo.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
+                } else if (recogernd < 0.4) {
+                    cartaEnMazo.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
+                } else if (recogernd < 0.6) {
+                    cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+                } else if (recogernd < 0.8) {
+                    cartaEnMazo.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
+                } else if (recogernd < 0.95) {
+                    cartaEnMazo.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2_2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
+                } else {
+                    cartaEnMazo.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
+                }
+            }
         }
     }
 
@@ -773,7 +815,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     base1.setSalud(100);
                     base1.setTextoLabel("" + base1.getSalud());
                 } else {
-                    base1.setSalud(base1.getSalud() + 20);
+                    base1.setSalud(base1.getSalud() + 10);
                     base1.setTextoLabel("" + base1.getSalud());
                 }
                 incrementoMana += 2;
@@ -783,11 +825,14 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             if (efecto.equals("0")) {
                 //sin efecto
             } else if (efecto.equals("1")) {
-                //+10 AT a otros minions
+                //+2 AT a otros minions
                 for (int i = 0; i < casillas.length - 1; i++) {
                     if (casillas[i].getMinion() != null) {
-                        if (casillas[i].getMinion().getPropietario() == player) {
-                            casillas[i].getMinion().setAtaque(casillas[i].getMinion().getAtaque() + 10);
+                        if (casillas[i].getMinion() != null) {
+                            if (casillas[i].getMinion().getPropietario() == player) {
+                                casillas[i].getMinion().setAtaque(casillas[i].getMinion().getAtaque() + 2);
+                                casillas[i].getMinion().setTextoLabel(casillas[i].getMinion().getAtaque() + "-" + casillas[i].getMinion().getSalud());
+                            }
                         }
                     }
                 }
@@ -804,7 +849,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     base2.setSalud(100);
                     base2.setTextoLabel("" + base2.getSalud());
                 } else {
-                    base2.setSalud(base2.getSalud() + 20);
+                    base2.setSalud(base2.getSalud() + 10);
                     base2.setTextoLabel("" + base2.getSalud());
                 }
                 incrementoManaIA += 2;
@@ -822,18 +867,27 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
      * Igual que el generador de el player1 pero para la IA
      */
     public void generarMazoIA() {
-        for (int i = 0; i < NCARTASMAZO; i += 5) {
-            /************AQUÍ SE PUEDE HACER UNA LECTURA DE UNA BD SOBRE LAS CARTAS**********/
-            cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1f, 0.5f));
-            //cartaEnMazoIA.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
-            cartaEnMazoIA.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
-            cartaEnMazoIA.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
-            cartaEnMazoIA.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2f, 4f));
-            cartaEnMazoIA.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
+        for (int i = 0; i < NCARTASMAZO; i++) {
+            recogernd = rnd.nextFloat();//se genera un numero para evaluar el intervalo
+            if (recogernd < 0.25) {
+                cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+            } else if (recogernd < 0.4) {
+                cartaEnMazoIA.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
+            } else if (recogernd < 0.45) {
+                cartaEnMazoIA.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
+            } else if (recogernd < 0.65) {
+                cartaEnMazoIA.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
+            } else if (recogernd < 0.85) {
+                cartaEnMazoIA.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
+            } else {
+                cartaEnMazoIA.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
+            }
         }
     }
+
     //contador usado en IA()
     private int i;
+
     /**
      * Método que hace la función de inteligencia artificial enemiga
      */
@@ -842,7 +896,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         if (cartaEnMazoIA.size() > 0 && contOroIA >= 25) {
             if (jugarCarta(cartaEnMazoIA.get(0), 2)) {
                 contOroIA -= 25;//se resta el coste por robo
-                lmovimientoP2.setText("ULTIMA JUGADA: " + cartaEnMazoIA.get(0).getId());
+                lmovimientoP2.setText("ULTIMA JUGADA P2: " + cartaEnMazoIA.get(0).getId());
                 Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId() + ", quedan " + cartaEnMazoIA.size());
                 cartaEnMazoIA.remove(0);
                 i++;
