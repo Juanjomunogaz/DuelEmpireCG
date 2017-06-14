@@ -30,46 +30,40 @@ import java.util.ArrayList;
  */
 
 public class PantallaPartidaJuego extends PantallaBaseJuego {
-    //variables que guardan la dimension de pantalla del dispositivo
+    //Variables que guardan la dimension de pantalla del dispositivo
     private float ancho, alto;
     /*IMPORTANTE SABER QUE:
      Las dimensiones de pantalla por defecto son de 480*640 unidades, por lo tanto las posiciones
      de todos los componentes usados comprenderán entre esos rangos escalados a la resolución
      correspondiente.*/
-    private float relacionx, relaciony;//escalado para la pantalla
-    //variables encargadas de centrar la vista en la pantalla
+    private float relacionx, relaciony;//Escalado para la pantalla
+    //Variables encargadas de centrar la vista en la pantalla
     private OrthographicCamera camera;
     private FitViewport viewp;
-
+    //Casillas de juego que recogen la ubicacion de los personajes y las estructuras
     private final int NUMCASILLAS = 20;
-    private Casilla[] casillas;/*array que contendrá las casillas de
+    private Casilla[] casillas;/*Array que contendrá las casillas de
     juego (que contendrán las estructuras o personajes)*/
     private ActorMinion actualizaMinion;//para usar los métodos de actualizacion de minions
 
-    //label que muestra el tiempo de partida
+    //Label que muestra el tiempo de partida
     private Label lcronometro;
-    private Label lmovimientoP2;//label que indica la última carta jugada por el P2;
-
-    //contadores de recursos
+    private Label lmovimientoP2;//Label que indica la última carta jugada por el P2;
+    //Contadores de recursos
     private int contOro, contMana, incrementoOro, incrementoMana;
-
-    //mazo
+    //Mazo
     private final int NCARTASMAZO = 30;
     private int cartasActuales;//cartas restantes
     private ArrayList<Carta> cartaEnMazo;
-
-    //mano
+    //Mano
     private final int CARTASMANO = 5;
     private Carta[] cartaEnMano;/*CARTASENMANO cartas en mano, representa con una instancia Carta()
      si esta vacía una posición*/
-
-    //cronómetro
+    //Cronómetro
     private float sumDeltaTiempo;
     private int contador;
-
-    //escenario
+    //Escenario
     private Stage stage;
-
     //Actores fijos de inicio
     private ActorEstructura base1, base2;
     private ActorRecurso recursoOro, recursoMana;
@@ -82,12 +76,10 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     /*Skin: contiene los datos y formatos necesarios para escribir y establecer gráficos para
      los labels y los botones de la interfaz*/
     private Skin skin;
-
-    //Botones
-    //mazo
+    //Mazo
     private TextButton btnmazo;
     private Label lmazo;
-    //mano del jugador
+    //Mano del jugador
     private TextButton btnmano1;
     private Label lmano1;
     private TextButton btnmano2;
@@ -98,18 +90,16 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     private Label lmano4;
     private TextButton btnmano5;
     private Label lmano5;
-    //label que anunciará al ganador de la partida
+    //Label que anunciará al ganador de la partida
     private Label ganador;
     boolean noMostrado;
-    float tiempoMostrado;//tiempo que dura mostrado el label de ganador
-
-    //lista que guarda todos los posibles efectos de carta y su acción al ser activados
+    float tiempoMostrado;//Tiempo que dura mostrado el label de ganador
+    //Lista que guarda todos los posibles efectos de carta y su acción al ser activados
     private String[][] listaDeEfectos;
-    //variables de sonido y música
+    //Variables de sonido y música
     private Music musica;
     private Sound drawCard, playHechizo, playMinion;
-    //en los Actores
-    //imagen de fondo y textura de fondo
+    //Imagen de fondo y textura de fondo
     private Texture tfondo;
     private Image fondo;
 
@@ -133,7 +123,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         relacionx = 640 / ancho;
         relaciony = 480 / alto;
         camera.position.set(ancho / 2f, alto / 2f, 0);
-        //instacio la skin, para poderla usar en cualquier componente
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         if (ancho < alto) {
             ancho = Gdx.graphics.getHeight();
@@ -142,30 +131,30 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         sumDeltaTiempo = 0;
         contador = 0;
         /*VARIABLES PLAYER*/
-        contMana = 200;/***************************************************************************************************/
+        contMana = 200;
         contOro = 200;
         incrementoMana = 2;
         incrementoOro = 2;
         /*VARIABLES CPU*/
-        contManaIA = 200;/***************************************************************************************************/
+        contManaIA = 200;
         contOroIA = 200;
         incrementoManaIA = 2;
         incrementoOroIA = 2;
-        i = 1;//interacciones de la ia
+        i = 1;//Interacciones de la ia
         CPUespera = false;
 
         /*****************AQUÍ SE PODRÍA USAR UNA BD********************/
-        /* se instancia la lista de los efectos existentes .Cada linea admite como máximo unos 15 caracteres
+        /*Se instancia la lista de los efectos existentes .Cada linea admite como máximo unos 15 caracteres
         con el tamaño de fuente usado en los label de carta que los escriben en pantalla*/
         listaDeEfectos = new String[][]{{"0", ""}, {"1", "Da +2 AT a los\nminions"}, {"2", "Hace 20 danos a\nla base enemiga"},
                 {"3", "Da +2 de tasa\nde oro"}, {"4", "Cura 10 vidas a\ntu base y da +2\nde tasa de mana"}};
 
         cartasActuales = NCARTASMAZO;
         cartaEnMazo = new ArrayList<Carta>();
-        //se rellena el mazo con NCARTASMAZO cartas aleatorias
+        //Se rellena el mazo con NCARTASMAZO cartas aleatorias
         generarMazo(NCARTASMAZO);
         cartaEnMano = new Carta[5];
-        //Genero el mazo de la IA
+        //Se genera el mazo de la IA
         generarMazoIA();
 
         tfondo = new Texture("backgrounds/fondo.png");
@@ -175,15 +164,13 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         tbase2 = new Texture("structures/basePortal_2.png");
         toro = new Texture("resources/gold.png");
         tmana = new Texture("resources/mana.png");
-        //instancio las bases
         base1 = new ActorEstructura(tbase1, "Player1", skin, relacionx, relaciony);
         base2 = new ActorEstructura(tbase2, "Player2", skin, relacionx, relaciony);
-        //se limpian las casillas del tablero
         casillas = new Casilla[NUMCASILLAS];
         for (int i = 0; i < casillas.length; i++) {
             casillas[i] = new Casilla();
         }
-        //se guardan las casillas que son fijas
+        //Se guardan las casillas que son fijas
         casillas[0].setEstructura(base1);
         casillas[casillas.length - 1].setEstructura(base2);
         Gdx.app.log("", "E-P1" + casillas[0].getEstructura().getName() + ", E-P2" + casillas[0].getEstructura().getName());
@@ -201,7 +188,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 lmovimientoP2.setFontScale(1);
                 break;
         }
-        //defino el tamaño del label del ganador
         tiempoMostrado = 0;
         ganador = new Label("", skin);
         ganador.setPosition(ancho / 8f, alto / 1.3f);
@@ -234,8 +220,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         recursoOro = new ActorRecurso(toro, "Oro", skin, relacionx, relaciony);
         recursoMana.setTextoLabel(contMana + " +" + incrementoMana);
         recursoOro.setTextoLabel(contOro + " +" + incrementoOro);
-
-        //se incluyen en el escenario todos los componentes que son fijos desde que se entra a la pantalla
+        //Se incluyen en el escenario todos los componentes que son fijos desde que se entra a la pantalla
         stage.addActor(fondo);
         stage.addActor(base1);
         stage.addActor(base2);
@@ -259,8 +244,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         stage.addActor(lmano4);
         stage.addActor(btnmano5);
         stage.addActor(lmano5);
-        ganador.setText("HAS SIDO DERROTADO");
-        stage.addActor(ganador);
+        //Se activa la entrada de datos en el escenario
         Gdx.input.setInputProcessor(stage);
         musica.setVolume(0.6f);
         musica.play();
@@ -287,7 +271,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0.2f, 0.1f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // es necesario ejecutar esta para limpiar el buffer de bits
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Es necesario ejecutar glClear para limpiar el buffer de bits
         stage.act();
         stage.draw();
         updateTiempo_Recursos_Minions(delta);
@@ -335,7 +319,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     public void updateTiempo_Recursos_Minions(float delta) {
         sumDeltaTiempo += delta;
         //if(sumDeltaTiempo>=0.25) {//cada 0.5 segundos actualiza los personajes
-        // se actualizan los minions que están en juego
+        // Se actualizan los minions que están en juego
         for (int i = 0; i < casillas.length; i++) {
             if (casillas[i].getMinion() != null) {
                 actualizaMinion = casillas[i].getMinion();
@@ -387,7 +371,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             public void changed(ChangeEvent event, Actor actor) {
                 if (cartasActuales >= 1 && contOro >= 25) {
                     drawCard.play();
-                    //ahora hay que mirar si hay hueco en la mano del jugador para poder robar
+                    //Ahora hay que mirar si hay hueco en la mano del jugador para poder robar
                     if (cartaEnMano[0].getCoste()[0] == -1) {
                         cartaEnMano[0] = cartaEnMazo.get(0);
                         if (cartaEnMano[0].getTipo().equals("minion")) {
@@ -482,14 +466,14 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.log("Coste de mano 1", "" + cartaEnMano[0].getCoste()[0]);
                 if (cartaEnMano[0].getCoste()[0] > -1) {
-                    //pasamos los datos del minion o hechizo, y miramos si se puede jugar
+                    //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
                     if (jugarCarta(cartaEnMano[0], 1)) {
                         if (cartaEnMano[0].getAtaque() < 0) {
                             playHechizo.play();
                         } else {
                             playMinion.play();
                         }
-                        cartaEnMano[0] = new Carta();//limpiamos la posición en mano tras jugar la carta
+                        cartaEnMano[0] = new Carta();//Se limpia la posición en mano tras jugar la carta
                         btnmano1.setText("Nada");
                         try {
                             Gdx.app.log("Coste actual de la carta: ", cartaEnMano[0].getCoste()[0] + "," + cartaEnMano[0].getCoste()[1]);
@@ -513,14 +497,14 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 Gdx.app.log("Coste de mano 2", "" + cartaEnMano[1].getCoste()[0]);
                 if (cartaEnMano[1].getCoste()[0] > -1) {
                     if (cartaEnMano[1].getCoste()[0] > -1) {
-                        //pasamos los datos del minion o hechizo, y miramos si se puede jugar
+                        //Se pasa los datos del minion o hechizo, y se mira si se puede jugar
                         if (jugarCarta(cartaEnMano[1], 1)) {
                             if (cartaEnMano[1].getAtaque() < 0) {
                                 playHechizo.play();
                             } else {
                                 playMinion.play();
                             }
-                            cartaEnMano[1] = new Carta();//limpiamos la posición en mano tras jugar la carta
+                            cartaEnMano[1] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano2.setText("Nada");
                             try {
                                 Gdx.app.log("Coste actual de la carta: ", cartaEnMano[1].getCoste()[0] + "," + cartaEnMano[1].getCoste()[1]);
@@ -544,14 +528,14 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 Gdx.app.log("Coste de mano 3", "" + cartaEnMano[2].getCoste()[0]);
                 if (cartaEnMano[2].getCoste()[0] > -1) {
                     if (cartaEnMano[2].getCoste()[0] > -1) {
-                        //pasamos los datos del minion o hechizo, y miramos si se puede jugar
+                        //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
                         if (jugarCarta(cartaEnMano[2], 1)) {
                             if (cartaEnMano[2].getAtaque() < 0) {
                                 playHechizo.play();
                             } else {
                                 playMinion.play();
                             }
-                            cartaEnMano[2] = new Carta();//limpiamos la posición en mano tras jugar la carta
+                            cartaEnMano[2] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano3.setText("Nada");
                             try {
                                 Gdx.app.log("Coste actual de la carta: ", cartaEnMano[2].getCoste()[0] + "," + cartaEnMano[2].getCoste()[1]);
@@ -575,14 +559,14 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 Gdx.app.log("Coste de mano 4", "" + cartaEnMano[3].getCoste()[0]);
                 if (cartaEnMano[3].getCoste()[0] > -1) {
                     if (cartaEnMano[3].getCoste()[0] > -1) {
-                        //pasamos los datos del minion o hechizo, y miramos si se puede jugar
+                        //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
                         if (jugarCarta(cartaEnMano[3], 1)) {
                             if (cartaEnMano[3].getAtaque() < 0) {
                                 playHechizo.play();
                             } else {
                                 playMinion.play();
                             }
-                            cartaEnMano[3] = new Carta();//limpiamos la posición en mano tras jugar la carta
+                            cartaEnMano[3] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano4.setText("Nada");
                             try {
                                 Gdx.app.log("Coste actual de la carta: ", cartaEnMano[3].getCoste()[0] + "," + cartaEnMano[3].getCoste()[1]);
@@ -606,14 +590,14 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 Gdx.app.log("Coste de mano 5", "" + cartaEnMano[4].getCoste()[1]);
                 if (cartaEnMano[4].getCoste()[0] > -1) {
                     if (cartaEnMano[4].getCoste()[0] > -1) {
-                        //pasamos los datos del minion o hechizo, y miramos si se puede jugar
+                        //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
                         if (jugarCarta(cartaEnMano[4], 1)) {
                             if (cartaEnMano[4].getAtaque() < 0) {
                                 playHechizo.play();
                             } else {
                                 playMinion.play();
                             }
-                            cartaEnMano[4] = new Carta();//limpiamos la posición en mano tras jugar la carta
+                            cartaEnMano[4] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano5.setText("Nada");
                             try {
                                 Gdx.app.log("Coste actual de la carta: ", cartaEnMano[4].getCoste()[0] + "," + cartaEnMano[4].getCoste()[1]);
@@ -664,7 +648,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     public boolean jugarCarta(Carta carta, int player) {
         if (player == 1) {
             if (carta.getCoste()[0] <= contOro && carta.getCoste()[1] <= contMana) {
-                //miramos el caso de invocar un minion y que además la casilla de invocación esté libre
+                //Se mira el caso de invocar un minion y que además la casilla de invocación esté libre
                 boolean casillaInvocacionLibre;
                 if (casillas[0].getMinion() == null) {
                     casillaInvocacionLibre = true;
@@ -676,30 +660,30 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     contOro -= carta.getCoste()[0];
                     tminion = new Texture(carta.getRutaTextura());
                     minion = new ActorMinion(1, 1, carta.getId(), tminion, relacionx, relaciony, carta.getTamXminion(), carta.getTamYminion(), carta.getDefensa(), carta.getAtaque(), carta.getRatioAtaque(), carta.getMovilidad(), juego, skin);
-                    minion.setPosition((640f / relacionx) / casillas.length, 220f / relaciony);//se invoca en la base
+                    minion.setPosition((640f / relacionx) / casillas.length, 220f / relaciony);//Se invoca en la base
                     minion.getLabelSalud().setPosition((640f / relacionx) / casillas.length + carta.getTamXminion() / 3f / relacionx, 220f / relaciony + carta.getTamYminion() / relaciony);
                     casillas[0].setMinion(minion);
                     Gdx.app.log("casilla 0  ", "Minion: " + casillas[0].getMinion().getName() + ", Estructura: " + casillas[0].getEstructura().getName());
                     stage.addActor(minion);
                     stage.addActor(minion.getLabelSalud());
                     activarEfectoCarta(carta, 1);
-                /* despues de invocar el esbirro, si este tiene efecto se activa*/
+                    //Después de invocar el esbirro, si este tiene efecto se activa
                     Gdx.app.log("Carta jugada: ", minion.getName());
                     return true;
                 } else if (carta.getTipo().equals("hechizo")) {
                     contMana -= carta.getCoste()[1];
                     contOro -= carta.getCoste()[0];
-                /*EFECTO*/
+                    //EFECTO
                     activarEfectoCarta(carta, 1);
                     return true;
                 }
             } else {
-            /*NO SE HA PODIDO JUGAR POR COSTE*/
+            //NO SE HA PODIDO JUGAR POR COSTE
                 return false;
             }
         } else {//player 2
             if (carta.getCoste()[0] <= contOroIA && carta.getCoste()[1] <= contManaIA) {
-                //miramos el caso de invocar un minion y que además la casilla de invocación esté libre
+                //Se mira el caso de invocar un minion y que además la casilla de invocación esté libre
                 boolean casillaInvocacionLibre;
                 if (casillas[casillas.length - 1].getMinion() == null) {
                     casillaInvocacionLibre = true;
@@ -717,19 +701,19 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     Gdx.app.log("casilla final  ", "Minion: " + casillas[casillas.length - 1].getMinion().getName() + ", Estructura: " + casillas[casillas.length - 1].getEstructura().getName());
                     stage.addActor(minion);
                     stage.addActor(minion.getLabelSalud());
+                    //Despues de invocar el esbirro, si este tiene efecto se activa
                     activarEfectoCarta(carta, 2);
-                /* despues de invocar el esbirro, si este tiene efecto se activa*/
                     Gdx.app.log("Carta jugada: ", minion.getName());
                     return true;
                 } else if (carta.getTipo().equals("hechizo")) {
                     contManaIA -= carta.getCoste()[1];
                     contOroIA -= carta.getCoste()[0];
-                /*EFECTO*/
+                    //EFECTO
                     activarEfectoCarta(carta, 2);
                     return true;
                 }
             } else {
-            /*NO SE HA PODIDO JUGAR POR COSTE*/
+                //NO SE HA PODIDO JUGAR POR COSTE
                 return false;
             }
         }
@@ -833,35 +817,35 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     private boolean CPUespera;
 
     /**
-     * Igual que el generador de el player pero para la IA
+     * Igual que el generador de el player1 pero para la IA
      */
     public void generarMazoIA() {
         for (int i = 0; i < NCARTASMAZO; i += 5) {
-            /************AQUÍ SE PUEDE HACER UNA LECTURA DE UN FICHERO BINARIO O BD, SOBRE LAS CARTAS**********/
+            /************AQUÍ SE PUEDE HACER UNA LECTURA DE UNA BD SOBRE LAS CARTAS**********/
             cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 50f, 60f, new int[]{30, 30}, 3, 4, 1f, 0.5f));
             //cartaEnMazoIA.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
-            cartaEnMazoIA.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
             cartaEnMazoIA.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
+            cartaEnMazoIA.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
             cartaEnMazoIA.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2f, 4f));
             cartaEnMazoIA.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
         }
     }
-
+    //contador usado en IA()
     private int i;
-
     /**
      * Método que hace la función de inteligencia artificial enemiga
      */
     private void IA() {
         Gdx.app.log("Juega la IA ", "mazoIA " + cartaEnMazoIA.size());
-        if (cartaEnMazoIA.size() > 0) {
+        if (cartaEnMazoIA.size() > 0 && contOroIA >= 25) {
             if (jugarCarta(cartaEnMazoIA.get(0), 2)) {
+                contOroIA -= 25;//se resta el coste por robo
                 lmovimientoP2.setText("ULTIMA JUGADA: " + cartaEnMazoIA.get(0).getId());
                 Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId() + ", quedan " + cartaEnMazoIA.size());
                 cartaEnMazoIA.remove(0);
                 i++;
             } else {
-                Gdx.app.log("La Ia no ha podido jugar la " + i + "º carta: ", "" + cartaEnMazoIA.get(0).getId() + "; Tiene O " + contOroIA + " M " + contManaIA);
+                Gdx.app.log("La IA no ha podido jugar la " + i + "º carta: ", "" + cartaEnMazoIA.get(0).getId() + "; Tiene O " + contOroIA + " M " + contManaIA);
             }
         }
     }

@@ -15,6 +15,9 @@ import com.gdx.duelempire.componentes.Casilla;
  * Created by juanjo on 03/05/2017.
  */
 
+/**
+ * Clase objeto de tipo personaje
+ */
 public class ActorMinion extends Actor {
     private Texture base;
     private float relacionx, relaciony;// representan la escala respecto a la pantalla
@@ -116,9 +119,9 @@ public class ActorMinion extends Actor {
         this.ratioAtaque = ratioAtaque;
         contadorMovimiento = 0f;
         segundo = 0f;
-        puedeDesplazarse = false;// no se puede mover hasta que no pase su 'movimiento'
+        puedeDesplazarse = false;// No se puede mover hasta que no pase su 'movimiento'
         puedeAtacar = false;
-        //se cargan los sonidos
+        //Se cargan los sonidos
         hit = juego.getManager().get("music/hit.mp3");
         defeat = juego.getManager().get("music/defeat.mp3");
         lSalud = new Label(ataque + "-" + defensa, skin);

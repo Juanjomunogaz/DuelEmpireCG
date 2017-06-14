@@ -17,7 +17,7 @@ public class Carta {
     private int ataque, defensa;
     private float movilidad;//movilidad medida en casillas/segundo
     private float ratioAtaque;
-    private int[] coste;//representa el coste de oro y mana de la carta coste[0]=oro, coste[1]=mana
+    private int[] coste;//Representa el coste de oro y mana de la carta coste[0]=oro, coste[1]=mana
     private String rutaTextura;
     private float tamXminion, tamYminion;
 
@@ -85,8 +85,8 @@ public class Carta {
      * Constructor vacio para representar que no hay carta
      */
     public Carta() {
-        this.coste = new int[]{-1, -1};// ya que una carta no puede ser de coste negativo, se va a identificar así
-        // cuando representemos que no hay carta en la mano del jugador
+        this.coste = new int[]{-1, -1};/* Ya que una carta no puede ser de coste negativo, se va a identificar así
+        cuando representemos que no hay carta en la mano del jugador*/
     }
 
     /**
@@ -101,7 +101,7 @@ public class Carta {
         this.id = id;
         this.efecto = efecto;
         this.coste = coste;
-        //diferencio con valores negativos de stats a los hechizos
+        //Diferencio con valores negativos de stats a los hechizos
         this.ataque = -1;
         this.defensa = -1;
         this.movilidad = -1;

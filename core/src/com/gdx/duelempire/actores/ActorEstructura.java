@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  * Created by juanjo on 17/05/2017.
  */
 
+/**
+ * Clase objeto de tipo estructura
+ */
 public class ActorEstructura extends Actor {
     private String tipo;
     private Texture base;
@@ -65,7 +68,6 @@ public class ActorEstructura extends Actor {
         this.setTextoLabel(""+salud);
     }
 
-    //usado para actualizar el actor
     @Override
     public void act(float delta) {
         super.act(delta);

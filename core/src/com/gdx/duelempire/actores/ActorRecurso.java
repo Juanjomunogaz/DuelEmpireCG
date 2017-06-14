@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  * Created by juanjo on 24/05/2017.
  */
 
+/**
+ * Clase objeto del tipo recurso
+ */
 public class ActorRecurso extends Actor {
     private Texture base;
     private float relacionx, relaciony;// representan la escala respecto a la pantalla
