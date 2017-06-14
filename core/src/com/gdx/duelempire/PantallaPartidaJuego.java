@@ -252,6 +252,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
 
     @Override
     public void hide() {
+        musica.setVolume(0);
         musica.stop();
         stage.dispose();
         Gdx.input.setInputProcessor(null);
@@ -259,6 +260,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
 
     @Override
     public void dispose() {
+        musica.setVolume(0);
         musica.stop();
         stage.dispose();
         Gdx.input.setInputProcessor(null);
@@ -695,7 +697,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     contOroIA -= carta.getCoste()[0];
                     tminion = new Texture(carta.getRutaTextura());
                     minion = new ActorMinion(2, casillas.length, carta.getId(), tminion, relacionx, relaciony, carta.getTamXminion(), carta.getTamYminion(), carta.getDefensa(), carta.getAtaque(), carta.getRatioAtaque(), carta.getMovilidad(), juego, skin);
-                    minion.setPosition(((640f / relacionx) / casillas.length) * (casillas.length - 2), 220f / relaciony);//se invoca en la base
+                    minion.setPosition(580f / relacionx , 220f / relaciony);//se invoca en la base
                     minion.getLabelSalud().setPosition(((640f / relacionx) / casillas.length) * (casillas.length - 2) + carta.getTamXminion() / 3f / relacionx, 220f / relaciony + carta.getTamYminion() / relaciony);
                     casillas[casillas.length - 1].setMinion(minion);
                     Gdx.app.log("casilla final  ", "Minion: " + casillas[casillas.length - 1].getMinion().getName() + ", Estructura: " + casillas[casillas.length - 1].getEstructura().getName());
@@ -730,7 +732,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             /************AQUÍ SE PUEDE HACER UNA LECTURA DE UN FICHERO BINARIO O BD, SOBRE LAS CARTAS**********/
             cartaEnMazo.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2_2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
             cartaEnMazo.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
-            cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 50f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+            cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
             //cartaEnMazo.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
             cartaEnMazo.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
             cartaEnMazo.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
@@ -822,7 +824,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     public void generarMazoIA() {
         for (int i = 0; i < NCARTASMAZO; i += 5) {
             /************AQUÍ SE PUEDE HACER UNA LECTURA DE UNA BD SOBRE LAS CARTAS**********/
-            cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 50f, 60f, new int[]{30, 30}, 3, 4, 1f, 0.5f));
+            cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1f, 0.5f));
             //cartaEnMazoIA.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
             cartaEnMazoIA.add(new Carta("Mina de oro", listaDeEfectos[3][0], new int[]{50, 10}));
             cartaEnMazoIA.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));

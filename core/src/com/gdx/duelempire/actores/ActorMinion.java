@@ -135,14 +135,14 @@ public class ActorMinion extends Actor {
         }
     }
 
-    private float contadorMovimiento;//contador de movimiento del esbirro
-    private float contadorRatio;//contador de ratio de ataque del esbirro
+    private float contadorMovimiento;//Contador de movimiento del esbirro
+    private float contadorRatio;//Contador de ratio de ataque del esbirro
     private boolean puedeAtacar;
     private float segundo;
-    private boolean puedeDesplazarse;//para comprobar si ha pasado ya el tiempo de movimiento
+    private boolean puedeDesplazarse;//Para comprobar si ha pasado ya el tiempo de movimiento
     private int tiempoVidaMinion;
 
-    //usado para actualizar el actor
+    //Usado para actualizar el actor
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -152,7 +152,7 @@ public class ActorMinion extends Actor {
             segundo = 0;
         }
         contadorMovimiento += delta;
-        if ((contadorMovimiento >= movimiento /*&& sinObstaculo*/)) {
+        if ((contadorMovimiento >= movimiento)) {
             puedeDesplazarse = true;
             contadorMovimiento = 0;
         }
@@ -167,9 +167,7 @@ public class ActorMinion extends Actor {
     public void draw(Batch batch, float alpha) {
         super.draw(batch, alpha);
         batch.draw(base, getX(), getY(), tamanox / relacionx, tamanoy / relaciony);
-        // batch.draw(new TextureRegion(base), getX(), getY(), tamanox / relacionx, tamanoy / relaciony,tamanox,tamanoy,1,1,-45f);
     }
-
 
     /**
      * Método para actualizar un actor sincronizandolo con el resto

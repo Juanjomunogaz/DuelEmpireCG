@@ -100,12 +100,14 @@ public class PantallaMenuPrincipalJuego extends PantallaBaseJuego {
 
     @Override
     public void hide() {
+        musica.setVolume(0);
         musica.stop();
         stage.dispose();
     }
 
     @Override
     public void dispose() {
+        musica.setVolume(0);
         musica.stop();
         stage.dispose();
     }
