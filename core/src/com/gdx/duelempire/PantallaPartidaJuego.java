@@ -898,6 +898,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 contOroIA -= 25;//se resta el coste por robo
                 lmovimientoP2.setText("ULTIMA JUGADA P2: " + cartaEnMazoIA.get(0).getId());
                 Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId() + ", quedan " + cartaEnMazoIA.size());
+                Gdx.app.log("La IA juega la " + i + "º carta: ", "" + cartaEnMazoIA.get(0).getId() + "; Tiene O " + contOroIA + " M " + contManaIA);
                 cartaEnMazoIA.remove(0);
                 i++;
             } else {

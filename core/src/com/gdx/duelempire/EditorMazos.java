@@ -93,6 +93,8 @@ public class EditorMazos extends PantallaBaseJuego {
                 // Nada en principio
                 break;
         }
+        musica.setVolume(0.8f);
+        musica.play();
     }
 
     @Override
@@ -156,7 +158,7 @@ public class EditorMazos extends PantallaBaseJuego {
         info = new Label("\nBorra tu actual mazo o selecciona\ncartas hasta llegar a las 30 que completan\nel mazo.\n" +
                 "(Luego las robas en el mismo orden)\nVan  "
                 + i + " de 30", skin);
-        info.setPosition(ancho / 2f, (alto / 20f) * 15f);
+        info.setPosition(ancho / 2f, (alto / 20f) * 16f);
 
         btnfinalizar = new TextButton("GUARDAR MAZO", skin);
         btnfinalizar.setSize(ancho / 5f, alto / 8f);
@@ -274,14 +276,15 @@ public class EditorMazos extends PantallaBaseJuego {
         //escalado de los campos en función del dispositivo
         switch (Gdx.app.getType()) {
             case Android:
-                btnfinalizar.getLabel().setFontScale(3);
-                btncarta1.getLabel().setFontScale(3);
-                btncarta2.getLabel().setFontScale(3);
-                btncarta3.getLabel().setFontScale(3);
-                btncarta4.getLabel().setFontScale(3);
-                btncarta5.getLabel().setFontScale(3);
-                btncarta6.getLabel().setFontScale(3);
-                info.setFontScale(2);
+                btnfinalizar.getLabel().setFontScale(2);
+                btncarta1.getLabel().setFontScale(2);
+                btncarta2.getLabel().setFontScale(2);
+                btncarta3.getLabel().setFontScale(2);
+                btncarta4.getLabel().setFontScale(2);
+                btncarta5.getLabel().setFontScale(2);
+                btncarta6.getLabel().setFontScale(2);
+                btnBorraryVolver.getLabel().setFontScale(1.5f);
+                info.setFontScale(1);
                 break;
             case Desktop:
                 btnfinalizar.getLabel().setFontScale(1);
@@ -291,6 +294,7 @@ public class EditorMazos extends PantallaBaseJuego {
                 btncarta4.getLabel().setFontScale(1);
                 btncarta5.getLabel().setFontScale(1);
                 btncarta6.getLabel().setFontScale(1);
+                btnBorraryVolver.getLabel().setFontScale(1);
                 info.setFontScale(0.7f);
                 break;
         }
