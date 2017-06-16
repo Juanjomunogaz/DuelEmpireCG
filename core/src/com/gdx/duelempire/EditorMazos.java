@@ -312,5 +312,6 @@ public class EditorMazos extends PantallaBaseJuego {
         } catch (Exception e) {
             Gdx.app.log("fallo borrando", "" + juego.mazoGuardado.getInteger("C" + i));
         }
+        juego.mazoGuardado.flush();//se guardan los cambios de manera persistente
     }
 }

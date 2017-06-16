@@ -104,6 +104,11 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     private Texture tfondo;
     private Image fondo;
 
+    /*********************************************IA**********************************************/
+    private ArrayList<Carta> cartaEnMazoIA = new ArrayList<Carta>();
+    private int contOroIA, contManaIA, incrementoOroIA, incrementoManaIA;
+    private boolean CPUespera;
+
     private DuelEmpire_CardGame juego;
 
     /**
@@ -458,9 +463,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 }
             }
         });
-        /*******************************************************************
-         btnmazo = new Image(new Texture("resources/cardBack.png"));
-         ********************************************************************/
         cartaEnMano[0] = new Carta();
         btnmano1 = new TextButton("Nada", skin);
         btnmano1.setPosition(10 / relacionx, 30 / relaciony);
@@ -615,7 +617,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 }
             }
         });
-
         switch (Gdx.app.getType()) {
             case Android:
                 lmano1.setFontScale(2);
@@ -742,6 +743,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             existe = juego.mazoGuardado.getInteger("C1");
         } catch (Exception e) {
             Gdx.app.log("No se detectó ningun mazo", "");
+            existe = -1;
         }
         //Se mira que en la posicion uno haya una de las 6 cartas que existen en el juego
         if (existe > 0 && existe < 6) {
@@ -858,17 +860,12 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         }
     }
 
-    /*************************************************IA*************************************************/
-    private ArrayList<Carta> cartaEnMazoIA = new ArrayList<Carta>();
-    private int contOroIA, contManaIA, incrementoOroIA, incrementoManaIA;
-    private boolean CPUespera;
-
     /**
      * Igual que el generador de el player1 pero para la IA
      */
     public void generarMazoIA() {
         for (int i = 0; i < NCARTASMAZO; i++) {
-            recogernd = rnd.nextFloat();//se genera un numero para evaluar el intervalo
+            recogernd = rnd.nextFloat();//se genera un numero para evaluar los intervalos
             if (recogernd < 0.25) {
                 cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
             } else if (recogernd < 0.4) {
@@ -898,11 +895,11 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 contOroIA -= 25;//se resta el coste por robo
                 lmovimientoP2.setText("ULTIMA JUGADA P2: " + cartaEnMazoIA.get(0).getId());
                 Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId() + ", quedan " + cartaEnMazoIA.size());
-                Gdx.app.log("La IA juega la " + i + "º carta: ", "" + cartaEnMazoIA.get(0).getId() + "; Tiene O " + contOroIA + " M " + contManaIA);
+                Gdx.app.log("La IA juega la " + i + "º carta: "+cartaEnMazoIA.get(0).getId(), "; Tiene O " + contOroIA + " M " + contManaIA);
                 cartaEnMazoIA.remove(0);
                 i++;
             } else {
-                Gdx.app.log("La IA no ha podido jugar la " + i + "º carta: ", "" + cartaEnMazoIA.get(0).getId() + "; Tiene O " + contOroIA + " M " + contManaIA);
+                Gdx.app.log("La IA no ha podido jugar la " + i + "º carta: "+ cartaEnMazoIA.get(0).getId(), "; Tiene O " + contOroIA + " M " + contManaIA);
             }
         }
     }
