@@ -104,6 +104,10 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
     private Texture tfondo;
     private Image fondo;
 
+    private int existe;
+    private Random rnd;//Variable para generar una carta u otra en el generador de mazos
+    private float recogernd;//Guarda el valor del Random
+
     /*********************************************IA**********************************************/
     private ArrayList<Carta> cartaEnMazoIA = new ArrayList<Carta>();
     private int contOroIA, contManaIA, incrementoOroIA, incrementoManaIA;
@@ -146,7 +150,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         contOroIA = 200;
         incrementoManaIA = 2;
         incrementoOroIA = 2;
-        i = 1;//Interacciones de la ia
         CPUespera = false;
 
         /*****************AQUÍ SE PODRÍA USAR UNA BD********************/
@@ -182,7 +185,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         //Se guardan las casillas que son fijas
         casillas[0].setEstructura(base1);
         casillas[casillas.length - 1].setEstructura(base2);
-        Gdx.app.log("", "E-P1" + casillas[0].getEstructura().getName() + ", E-P2" + casillas[0].getEstructura().getName());
         lcronometro = new Label("0", skin);
         lcronometro.setPosition(300f / relacionx, 430f / relaciony);
         lmovimientoP2 = new Label("ULTIMA JUGADA: ", skin);
@@ -215,14 +217,11 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
 
     @Override
     public void show() {
-        Gdx.app.log("inf: ", "Entra a show");
-        Gdx.app.log("Datos camara:", "Anchura " + ancho + " |Largura " + alto);
         camera.setToOrtho(false, ancho, alto);
         camera.update();
         camera.position.set(ancho / 2f, alto / 2f, 0);
         camera.update();
         FitViewport viewp = new FitViewport(ancho, alto, camera);
-        Gdx.app.log("Datos camara2:", "Anchura vp" + camera.viewportWidth + " |Largura vp" + camera.viewportHeight);
         stage = new Stage(viewp);
 
         recursoMana = new ActorRecurso(tmana, "Mana", skin, relacionx, relaciony);
@@ -312,14 +311,12 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
 
     @Override
     public void resize(int width, int height) {
-        Gdx.app.log("inf: ", "Alto:" + height + " Ancho:" + width);
         ancho = width;
         alto = height;
         camera.setToOrtho(false, ancho, alto);
         camera.update();
         camera.position.set(ancho / 2f, alto / 2f, 0);
         stage.getViewport().update(width, height, true);
-        //Gdx.app.log("inf: ", "Alto img:" + heightImage + " Ancho img:" + widthImage);
     }
 
     /**
@@ -329,8 +326,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
      */
     public void updateTiempo_Recursos_Minions(float delta) {
         sumDeltaTiempo += delta;
-        //if(sumDeltaTiempo>=0.25) {//cada 0.5 segundos actualiza los personajes
-        // Se actualizan los minions que están en juego
         for (int i = 0; i < casillas.length; i++) {
             if (casillas[i].getMinion() != null) {
                 actualizaMinion = casillas[i].getMinion();
@@ -351,7 +346,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             CPUespera = false;
         }
         if (contador % 3 == 0 && !CPUespera) {//CPUespera evita que se itere varias veces en un segundo
-            Gdx.app.log("entra 10 seg IA", "segundo " + contador);
             IA();
             CPUespera = true;
         }
@@ -459,7 +453,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     /*Mecánica de robo*/
                     contOro -= 25;
                     recursoOro.setTextoLabel(contOro + " +" + incrementoOro);
-                    Gdx.app.log("ESTADO DEL MAZO", "NUMCARTAS " + cartaEnMazo.size());
                 }
             }
         });
@@ -472,7 +465,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         btnmano1.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("Coste de mano 1", "" + cartaEnMano[0].getCoste()[0]);
                 if (cartaEnMano[0].getCoste()[0] > -1) {
                     //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
                     if (jugarCarta(cartaEnMano[0], 1)) {
@@ -483,12 +475,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                         }
                         cartaEnMano[0] = new Carta();//Se limpia la posición en mano tras jugar la carta
                         btnmano1.setText("Nada");
-                        try {
-                            Gdx.app.log("Coste actual de la carta: ", cartaEnMano[0].getCoste()[0] + "," + cartaEnMano[0].getCoste()[1]);
-                        } catch (Exception e) {
-                            Gdx.app.log("Error", e.getMessage());
-
-                        }
                     }
                 }
             }
@@ -502,7 +488,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         btnmano2.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("Coste de mano 2", "" + cartaEnMano[1].getCoste()[0]);
                 if (cartaEnMano[1].getCoste()[0] > -1) {
                     if (cartaEnMano[1].getCoste()[0] > -1) {
                         //Se pasa los datos del minion o hechizo, y se mira si se puede jugar
@@ -514,11 +499,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                             }
                             cartaEnMano[1] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano2.setText("Nada");
-                            try {
-                                Gdx.app.log("Coste actual de la carta: ", cartaEnMano[1].getCoste()[0] + "," + cartaEnMano[1].getCoste()[1]);
-                            } catch (Exception e) {
-                                Gdx.app.log("Error", e.getMessage());
-                            }
                         }
                     }
                 }
@@ -533,7 +513,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         btnmano3.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("Coste de mano 3", "" + cartaEnMano[2].getCoste()[0]);
                 if (cartaEnMano[2].getCoste()[0] > -1) {
                     if (cartaEnMano[2].getCoste()[0] > -1) {
                         //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
@@ -545,11 +524,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                             }
                             cartaEnMano[2] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano3.setText("Nada");
-                            try {
-                                Gdx.app.log("Coste actual de la carta: ", cartaEnMano[2].getCoste()[0] + "," + cartaEnMano[2].getCoste()[1]);
-                            } catch (Exception e) {
-                                Gdx.app.log("Error", e.getMessage());
-                            }
                         }
                     }
                 }
@@ -564,7 +538,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         btnmano4.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("Coste de mano 4", "" + cartaEnMano[3].getCoste()[0]);
                 if (cartaEnMano[3].getCoste()[0] > -1) {
                     if (cartaEnMano[3].getCoste()[0] > -1) {
                         //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
@@ -576,11 +549,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                             }
                             cartaEnMano[3] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano4.setText("Nada");
-                            try {
-                                Gdx.app.log("Coste actual de la carta: ", cartaEnMano[3].getCoste()[0] + "," + cartaEnMano[3].getCoste()[1]);
-                            } catch (Exception e) {
-                                Gdx.app.log("Error", e.getMessage());
-                            }
                         }
                     }
                 }
@@ -595,7 +563,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         btnmano5.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("Coste de mano 5", "" + cartaEnMano[4].getCoste()[1]);
                 if (cartaEnMano[4].getCoste()[0] > -1) {
                     if (cartaEnMano[4].getCoste()[0] > -1) {
                         //Se pasan los datos del minion o hechizo, y se mira si se puede jugar
@@ -607,11 +574,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                             }
                             cartaEnMano[4] = new Carta();//Se limpia la posición en mano tras jugar la carta
                             btnmano5.setText("Nada");
-                            try {
-                                Gdx.app.log("Coste actual de la carta: ", cartaEnMano[4].getCoste()[0] + "," + cartaEnMano[4].getCoste()[1]);
-                            } catch (Exception e) {
-                                Gdx.app.log("Error", e.getMessage());
-                            }
                         }
                     }
                 }
@@ -670,12 +632,9 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     minion.setPosition((640f / relacionx) / casillas.length, 220f / relaciony);//Se invoca en la base
                     minion.getLabelSalud().setPosition((640f / relacionx) / casillas.length + carta.getTamXminion() / 3f / relacionx, 220f / relaciony + carta.getTamYminion() / relaciony);
                     casillas[0].setMinion(minion);
-                    Gdx.app.log("casilla 0  ", "Minion: " + casillas[0].getMinion().getName() + ", Estructura: " + casillas[0].getEstructura().getName());
                     stage.addActor(minion);
                     stage.addActor(minion.getLabelSalud());
                     activarEfectoCarta(carta, 1);
-                    //Después de invocar el esbirro, si este tiene efecto se activa
-                    Gdx.app.log("Carta jugada: ", minion.getName());
                     return true;
                 } else if (carta.getTipo().equals("hechizo")) {
                     contMana -= carta.getCoste()[1];
@@ -705,12 +664,10 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     minion.setPosition(580f / relacionx, 220f / relaciony);//se invoca en la base
                     minion.getLabelSalud().setPosition(580f / relacionx + carta.getTamXminion() / 3f / relacionx, 220f / relaciony + carta.getTamYminion() / relaciony);
                     casillas[casillas.length - 1].setMinion(minion);
-                    Gdx.app.log("casilla final  ", "Minion: " + casillas[casillas.length - 1].getMinion().getName() + ", Estructura: " + casillas[casillas.length - 1].getEstructura().getName());
                     stage.addActor(minion);
                     stage.addActor(minion.getLabelSalud());
                     //Despues de invocar el esbirro, si este tiene efecto se activa
                     activarEfectoCarta(carta, 2);
-                    Gdx.app.log("Carta jugada: ", minion.getName());
                     return true;
                 } else if (carta.getTipo().equals("hechizo")) {
                     contManaIA -= carta.getCoste()[1];
@@ -727,10 +684,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         return false;
     }
 
-    private int existe;//
-    private Random rnd;//Variable para generar una carta u otra en el generador de mazos
-    private float recogernd;//Guarda el valor del Random
-
     /**
      * Método utilizado para generar un mazo con un nº de cartas igual a NCARTASMAZO, SOLO se utilizará
      * cuando no hayas creado un mazo en el editor, o hayas borrado el mazo creado
@@ -742,7 +695,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         try {
             existe = juego.mazoGuardado.getInteger("C1");
         } catch (Exception e) {
-            Gdx.app.log("No se detectó ningun mazo", "");
             existe = -1;
         }
         //Se mira que en la posicion uno haya una de las 6 cartas que existen en el juego
@@ -750,7 +702,7 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
             //se va asignando el mazo a cada carta existente en el glosario (de 6 cartas)
             for (int i = 0; i <= 30; i++) {
                 if (juego.mazoGuardado.getInteger("C" + i) == 1) {
-                    cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+                    cartaEnMazo.add(new Carta("Guerrero", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
                 } else if (juego.mazoGuardado.getInteger("C" + i) == 2) {
                     cartaEnMazo.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2_2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
                 } else if (juego.mazoGuardado.getInteger("C" + i) == 3) {
@@ -771,9 +723,9 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                 } else if (recogernd < 0.4) {
                     cartaEnMazo.add(new Carta("Energizante", listaDeEfectos[4][0], new int[]{20, 60}));
                 } else if (recogernd < 0.6) {
-                    cartaEnMazo.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+                    cartaEnMazo.add(new Carta("Guerrero", listaDeEfectos[0][0], "minions/orco.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
                 } else if (recogernd < 0.8) {
-                    cartaEnMazo.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
+                    cartaEnMazo.add(new Carta("SuperAT", listaDeEfectos[1][0], new int[]{0, 60}));
                 } else if (recogernd < 0.95) {
                     cartaEnMazo.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2_2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
                 } else {
@@ -821,7 +773,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     base1.setTextoLabel("" + base1.getSalud());
                 }
                 incrementoMana += 2;
-                Gdx.app.log("Cont mana", "" + incrementoMana);
             }
         } else {
             if (efecto.equals("0")) {
@@ -855,7 +806,6 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
                     base2.setTextoLabel("" + base2.getSalud());
                 }
                 incrementoManaIA += 2;
-                Gdx.app.log("Cont mana", "" + incrementoManaIA);
             }
         }
     }
@@ -867,11 +817,11 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         for (int i = 0; i < NCARTASMAZO; i++) {
             recogernd = rnd.nextFloat();//se genera un numero para evaluar los intervalos
             if (recogernd < 0.25) {
-                cartaEnMazoIA.add(new Carta("Guerrero r", listaDeEfectos[0][0], "minions/orco_2.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
+                cartaEnMazoIA.add(new Carta("Guerrero", listaDeEfectos[0][0], "minions/orco_2.png", 40f, 60f, new int[]{30, 30}, 3, 4, 1, 0.5f));
             } else if (recogernd < 0.4) {
                 cartaEnMazoIA.add(new Carta("Titan de Fuego", listaDeEfectos[0][0], "minions/FlameDemon2.png", 80f, 90f, new int[]{40, 90}, 6, 25, 2, 4));
             } else if (recogernd < 0.45) {
-                cartaEnMazoIA.add(new Carta("SuperAt", listaDeEfectos[1][0], new int[]{0, 60}));
+                cartaEnMazoIA.add(new Carta("SuperAT", listaDeEfectos[1][0], new int[]{0, 60}));
             } else if (recogernd < 0.65) {
                 cartaEnMazoIA.add(new Carta("Bombazo", listaDeEfectos[2][0], new int[]{10, 40}));
             } else if (recogernd < 0.85) {
@@ -882,26 +832,18 @@ public class PantallaPartidaJuego extends PantallaBaseJuego {
         }
     }
 
-    //contador usado en IA()
-    private int i;
-
     /**
      * Método que hace la función de inteligencia artificial enemiga
      */
     private void IA() {
-        Gdx.app.log("Juega la IA ", "mazoIA " + cartaEnMazoIA.size());
+        int i = 0;
         if (cartaEnMazoIA.size() > 0 && contOroIA >= 25) {
             if (jugarCarta(cartaEnMazoIA.get(0), 2)) {
                 contOroIA -= 25;//se resta el coste por robo
                 lmovimientoP2.setText("ULTIMA JUGADA P2: " + cartaEnMazoIA.get(0).getId());
-                Gdx.app.log("Jugada la carta IA " + i + "º", "" + cartaEnMazoIA.get(0).getId() + ", quedan " + cartaEnMazoIA.size());
-                Gdx.app.log("La IA juega la " + i + "º carta: "+cartaEnMazoIA.get(0).getId(), "; Tiene O " + contOroIA + " M " + contManaIA);
                 cartaEnMazoIA.remove(0);
                 i++;
-            } else {
-                Gdx.app.log("La IA no ha podido jugar la " + i + "º carta: "+ cartaEnMazoIA.get(0).getId(), "; Tiene O " + contOroIA + " M " + contManaIA);
             }
         }
     }
 }
-

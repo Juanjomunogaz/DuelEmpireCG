@@ -183,18 +183,14 @@ public class ActorMinion extends Actor {
                 if (propietario == 1) {//minion de player 1
                     //se mira la casilla si está vacía de delante del minion o está en la de delante de la base enemiga
                     if (!(casillas[casilla].getMinion() == null) || casilla >= casillas.length - 1) {
-                        Gdx.app.log("No se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                         if (casillas[casilla].getMinion() != null && casillas[casilla].getMinion().getPropietario() == 2 && puedeAtacar) {
-                            Gdx.app.log("Minion ataca minion: ", "");
                             minionAtacaMinion(casillas[casilla - 1].getMinion(), casillas[casilla].getMinion(), casillas);
                             puedeAtacar = false;
                         } else if (casillas[casilla].getEstructura() != null && casillas[casilla].getEstructura().getTipo().equals("Player2") && puedeAtacar) {
-                            Gdx.app.log("Minion ataca estructura: ", "");
                             minionAtacaEstructura(casillas[casilla - 1].getMinion(), casillas[casilla].getEstructura());
                             puedeAtacar = false;
                         }
                     } else {//si estaba vacía se mueve hacia adelante
-                        Gdx.app.log("Se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                         casillas[casilla].setMinion(casillas[casilla - 1].getMinion());
                         casillas[casilla - 1].setMinion(null);
                         casilla++;
@@ -204,19 +200,14 @@ public class ActorMinion extends Actor {
                         lSalud.setPosition(getX() + tamanox / 3f / relacionx, getY() + tamanoy / relaciony);
                     }
                 } else {// minion de player 2
-                    Gdx.app.log("Minion P2: ", "casilla " + casilla);
                     //se mira la casilla si está vacía de delante del minion o está en la de delante de la base del jugado
                     if (!(casillas[casilla - 2].getMinion() == null) || casilla <= 2) {
-                        Gdx.app.log("No se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                         if (casillas[casilla - 2].getMinion() != null && casillas[casilla - 2].getMinion().getPropietario() == 1) {
-                            Gdx.app.log("Minion ataca minion: ", "");
                             minionAtacaMinion(casillas[casilla - 1].getMinion(), casillas[casilla - 2].getMinion(), casillas);
                         } else if (casillas[casilla - 2].getEstructura() != null && casillas[casilla - 2].getEstructura().getTipo().equals("Player1")) {
-                            Gdx.app.log("Minion ataca estructura: ", "");
                             minionAtacaEstructura(casillas[casilla - 1].getMinion(), casillas[casilla - 2].getEstructura());
                         }
                     } else {//si estaba vacía se mueve hacia adelante
-                        Gdx.app.log("Se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                         casillas[casilla - 2].setMinion(casillas[casilla - 1].getMinion());
                         casillas[casilla - 1].setMinion(null);
                         casilla--;
@@ -234,16 +225,13 @@ public class ActorMinion extends Actor {
                 //se mira la casilla si está vacía de delante del minion o está en la de delante de la base enemiga
                 if (!(casillas[casilla].getMinion() == null) || casilla >= casillas.length - 1) {
                     if (casillas[casilla].getMinion() != null && casillas[casilla].getMinion().getPropietario() == 2 && puedeAtacar) {
-                        Gdx.app.log("Minion ataca minion: ", "");
                         minionAtacaMinion(casillas[casilla - 1].getMinion(), casillas[casilla].getMinion(), casillas);
                         puedeAtacar = false;
                     } else if (casillas[casilla].getEstructura() != null && casillas[casilla].getEstructura().getTipo().equals("Player2") && puedeAtacar) {
-                        Gdx.app.log("Minion ataca estructura: ", "");
                         minionAtacaEstructura(casillas[casilla - 1].getMinion(), casillas[casilla].getEstructura());
                         puedeAtacar = false;
                     }
                 } else if (puedeDesplazarse) {//si estaba vacía se mueve hacia adelante
-                    Gdx.app.log("Se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                     casillas[casilla].setMinion(casillas[casilla - 1].getMinion());
                     casillas[casilla - 1].setMinion(null);
                     casilla++;
@@ -254,20 +242,15 @@ public class ActorMinion extends Actor {
                     puedeDesplazarse = false;
                 }
             } else {//si el propietario es player2
-                Gdx.app.log("No se puede mover el minion: ", "de la casilla " + casilla);
                 if (!(casillas[casilla - 2].getMinion() == null) || casilla <=2 ) {
-                    Gdx.app.log("No se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                     if (casillas[casilla - 2].getMinion() != null && casillas[casilla - 2].getMinion().getPropietario() == 1 && puedeAtacar) {
-                        Gdx.app.log("Minion ataca minion: ", "");
                         minionAtacaMinion(casillas[casilla - 1].getMinion(), casillas[casilla - 2].getMinion(), casillas);
                         puedeAtacar = false;
                     } else if (casillas[casilla - 2].getEstructura() != null && casillas[casilla - 2].getEstructura().getTipo().equals("Player1") && puedeAtacar) {
-                        Gdx.app.log("Minion ataca estructura: ", "");
                         minionAtacaEstructura(casillas[casilla - 1].getMinion(), casillas[casilla - 2].getEstructura());
                         puedeAtacar = false;
                     }
                 } else if (puedeDesplazarse) {//si estaba vacía se mueve hacia adelante
-                    Gdx.app.log("Se puede mover el minion: ", casillas[casilla - 1].getMinion().getName() + ",de la casilla " + casilla);
                     casillas[casilla - 2].setMinion(casillas[casilla - 1].getMinion());
                     casillas[casilla - 1].setMinion(null);
                     casilla--;
@@ -292,10 +275,8 @@ public class ActorMinion extends Actor {
         hit.play();
         atacado.setSalud(atacado.getSalud() - atacante.getAtaque());
         atacado.setTextoLabel(atacado.getAtaque() + "-" + atacado.getSalud());
-        Gdx.app.log("Datos ataque minions: ", "Player m ataca " + atacante.getPropietario() + "Player m atacado" + atacado.getPropietario() + " salud" + atacado.getSalud() + " casilla " + atacado.getCasilla());
         if (atacado.getSalud() < 1) {
             defeat.play();
-            Gdx.app.log("Datos ataque minions: ", "Player m atacado eliminado" + atacado.getPropietario());
             atacado.remove();
             atacado.getLabelSalud().remove();
             eliminarMinionDeCasilla[atacado.getCasilla() - 1].setMinion(null);//se mata el minion
@@ -311,12 +292,10 @@ public class ActorMinion extends Actor {
     public void minionAtacaEstructura(ActorMinion atacante, ActorEstructura estructura) {
         hit.play();
         if (estructura.getSalud() > atacante.getAtaque()) {
-            //Gdx.app.log("Ataque del minion: ",""+atacante.getAtaque());
             estructura.setSalud(estructura.getSalud() - atacante.getAtaque());
         } else {
             estructura.setSalud(0);
         }
-        //Gdx.app.log("Salud de la estructura atacada: ",""+casillaEstructura.getEstructura().getSalud());
         estructura.setTextoLabel("" + estructura.getSalud());
     }
 }

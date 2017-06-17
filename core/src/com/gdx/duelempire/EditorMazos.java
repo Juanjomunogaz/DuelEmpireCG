@@ -50,12 +50,10 @@ public class EditorMazos extends PantallaBaseJuego {
         alto = Gdx.graphics.getHeight();
     }
 
-
     @Override
     public void show() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.app.log("Datos camara:", "Anchura " + ancho + " |Largura " + alto);
         tfondo = new Texture("backgrounds/fondoMenu.png");
         fondo = new Image(tfondo);
         fondo.setSize(ancho, alto);
@@ -68,7 +66,6 @@ public class EditorMazos extends PantallaBaseJuego {
         camera.position.set(ancho / 2f, alto / 2f, 0);
         camera.update();
         viewp = new FitViewport(ancho, alto, camera);
-        Gdx.app.log("Datos camara2:", "Anchura vp" + camera.viewportWidth + " |Largura vp" + camera.viewportHeight);
         stage = new Stage(viewp);
         stage.addActor(fondo);
         stage.addActor(btncarta1);
@@ -142,7 +139,6 @@ public class EditorMazos extends PantallaBaseJuego {
 
     @Override
     public void resize(int width, int height) {
-        Gdx.app.log("inf: ", "Alto:" + height + " Ancho:" + width);
         ancho = width;
         alto = height;
         camera.setToOrtho(false, ancho, alto);
@@ -172,19 +168,16 @@ public class EditorMazos extends PantallaBaseJuego {
                 juego.setScreen(juego.menuPrincipal);
             }
         });
-
-        btncarta1 = new TextButton("Guerrero r", skin);
+        btncarta1 = new TextButton("Guerrero", skin);
         btncarta1.setSize(ancho / 5f, alto / 8f);
         btncarta1.setPosition(ancho / 5f, (alto / 20f) * 13f);
         btncarta1.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.mazoGuardado.putInteger("C" + i, 1);
-                Gdx.app.log("anadido 1", "");
                 i++;
             }
         });
-
         btncarta2 = new TextButton("Titan de Fuego", skin);
         btncarta2.setSize(ancho / 5f, alto / 8f);
         btncarta2.setPosition(ancho / 1.6f, (alto / 20f) * 13f);
@@ -192,11 +185,9 @@ public class EditorMazos extends PantallaBaseJuego {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.mazoGuardado.putInteger("C" + i, 2);
-                Gdx.app.log("anadido 2", "");
                 i++;
             }
         });
-
         btncarta3 = new TextButton("Super At", skin);
         btncarta3.setSize(ancho / 5f, alto / 8f);
         btncarta3.setPosition(ancho / 5f, (alto / 20f) * 8f);
@@ -204,11 +195,9 @@ public class EditorMazos extends PantallaBaseJuego {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.mazoGuardado.putInteger("C" + i, 3);
-                Gdx.app.log("anadido 3", "");
                 i++;
             }
         });
-
         btncarta4 = new TextButton("Bombazo", skin);
         btncarta4.setSize(ancho / 5f, alto / 8f);
         btncarta4.setPosition(ancho / 1.6f, (alto / 20f) * 8f);
@@ -216,11 +205,9 @@ public class EditorMazos extends PantallaBaseJuego {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.mazoGuardado.putInteger("C" + i, 4);
-                Gdx.app.log("anadido 4", "");
                 i++;
             }
         });
-
         btncarta5 = new TextButton("Mina de oro", skin);
         btncarta5.setSize(ancho / 5f, alto / 8f);
         btncarta5.setPosition(ancho / 5f, (alto / 20f) * 3f);
@@ -228,11 +215,9 @@ public class EditorMazos extends PantallaBaseJuego {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.mazoGuardado.putInteger("C" + i, 5);
-                Gdx.app.log("anadido 5", "");
                 i++;
             }
         });
-
         btncarta6 = new TextButton("Energizante", skin);
         btncarta6.setSize(ancho / 5f, alto / 8f);
         btncarta6.setPosition(ancho / 1.6f, (alto / 20f) * 3f);
@@ -240,23 +225,19 @@ public class EditorMazos extends PantallaBaseJuego {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.mazoGuardado.putInteger("C" + i, 6);
-                Gdx.app.log("anadido 6", "" + juego.mazoGuardado.getInteger("C" + i));
                 i++;
             }
         });
-
         btnBorraryVolver = new TextButton("BORRAR MAZO Y JUGAR CON UNO ALEATORIO", skin);
         btnBorraryVolver.setSize(ancho / 1.5f, alto / 12f);
         btnBorraryVolver.setPosition(ancho / 8f, (alto / 20f));
         btnBorraryVolver.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("anadido 6", "" + juego.mazoGuardado.getInteger("C" + i));
                 for (int u = 0; u < 30; u++) {
                     try {
                         juego.mazoGuardado.remove("C" + u);
                     } catch (Exception e) {
-                        Gdx.app.log("No existe la posicion " + u + " guardada", "");
                     }
                 }
                 switch (Gdx.app.getType()) {
@@ -272,7 +253,6 @@ public class EditorMazos extends PantallaBaseJuego {
                 juego.setScreen(juego.menuPrincipal);
             }
         });
-
         //escalado de los campos en función del dispositivo
         switch (Gdx.app.getType()) {
             case Android:
@@ -306,11 +286,9 @@ public class EditorMazos extends PantallaBaseJuego {
     public void borrarMazo() {
         try {
             for (int i = 0; i < 30; i++) {
-                Gdx.app.log("borrando", "" + juego.mazoGuardado.getInteger("C" + i) + " i " + i);
                 juego.mazoGuardado.remove("C" + i);
             }
         } catch (Exception e) {
-            Gdx.app.log("fallo borrando", "" + juego.mazoGuardado.getInteger("C" + i));
         }
         juego.mazoGuardado.flush();//se guardan los cambios de manera persistente
     }

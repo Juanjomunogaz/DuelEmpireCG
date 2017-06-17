@@ -59,7 +59,6 @@ public class PantallaMenuPrincipalJuego extends PantallaBaseJuego {
 
     @Override
     public void show() {
-        Gdx.app.log("Datos camara:", "Anchura " + ancho + " |Largura " + alto);
         tfondo = new Texture("backgrounds/fondoMenu.png");
         fondo = new Image(tfondo);
         fondo.setSize(ancho, alto);
@@ -73,7 +72,6 @@ public class PantallaMenuPrincipalJuego extends PantallaBaseJuego {
         camera.position.set(ancho / 2f, alto / 2f, 0);
         camera.update();
         viewp = new FitViewport(ancho, alto, camera);
-        Gdx.app.log("Datos camara2:", "Anchura vp" + camera.viewportWidth + " |Largura vp" + camera.viewportHeight);
         stage = new Stage(viewp);
         stage.addActor(fondo);
         stage.addActor(logo);
@@ -126,7 +124,6 @@ public class PantallaMenuPrincipalJuego extends PantallaBaseJuego {
 
     @Override
     public void resize(int width, int height) {
-        Gdx.app.log("inf: ", "Alto:" + height + " Ancho:" + width);
         ancho = width;
         alto = height;
         camera.setToOrtho(false, ancho, alto);
